@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -15,7 +16,7 @@ class User implements UserInterface, \Serializable
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
-     * ORM\@ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
@@ -35,7 +36,7 @@ class User implements UserInterface, \Serializable
     private $gender;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", options={"default":0})
      */
     private $karma;
 
@@ -45,10 +46,15 @@ class User implements UserInterface, \Serializable
     private $coments;
 
     /**
-     * @ORM\OneToMany(targetEntity="Comment",mappedBy="user")
+     * @ORM\OneToMany(targetEntity="History",mappedBy="user")
      */
     private $histories;
 
+    /**
+     * @ORM\OneToOne(targetEntity="Image",cascade={"all"},orphanRemoval=true,fetch="LAZY")
+     * @ORM\JoinColumn(name="image_id",referencedColumnName="id",nullable=true)
+     */
+    private $avatar;
 
     /**
      * String representation of object
@@ -325,4 +331,22 @@ class User implements UserInterface, \Serializable
     {
         return $this->histories;
     }
+
+    /**
+     * @return String
+     */
+    public function getAvatar()
+    {
+        return $this->avatar;
+    }
+
+    /**
+     * @param \AppBundle\Entity\Image $avatar
+     */
+    public function setAvatar($avatar = null)
+    {
+        $this->avatar = $avatar;
+    }
+
+
 }

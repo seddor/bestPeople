@@ -3,7 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraint as Assert;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -18,15 +18,9 @@ class Image extends BaseEntity
 
     /**
      * @Assert\Image(
-     *      maxSize="5M"
-//     *      mimeTypes='image/gif'
-//     *      mimeTypes='image/png'
-//     *      mimeTypes='image/jpeg'
-//     *      mimeTypes='image/pjpeg'
-     *      mimeTypes=array('image/gif',image/png',image/jpeg,image/pjpeg)
-     *
-     *
-     *
+     *      maxSize="5M",
+     *      mimeTypes="image/png"
+     * )
      */
     private $file;
 
@@ -40,7 +34,7 @@ class Image extends BaseEntity
     /**
      * @return UploadedFile
      */
-    private function getFile() {
+    public function getFile() {
         return $this->file;
     }
 
@@ -60,7 +54,7 @@ class Image extends BaseEntity
 
     public function getWebPatch() {
         return null === $this->path ? null
-            : $this->getUploadRootDir().'/'.$this->getUploadDir();
+            : $this->getUploadDir().'/'.$this->path;
     }
 
     public function upload($directory) {
@@ -72,7 +66,7 @@ class Image extends BaseEntity
             $this->getFile()->getClientOriginalName()
         );
 
-        $this->path = $this->getFile()->getClientOriginalName();
+        $this->path = $directory.'/'.$this->getFile()->getClientOriginalName();
 
         $this->file = null;
     }

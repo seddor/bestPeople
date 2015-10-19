@@ -20,7 +20,7 @@ class History extends BaseEntity
     private $date;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User",inversedBy="coments",fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="User",inversedBy="histories",fetch="LAZY")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private $user;
