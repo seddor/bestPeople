@@ -162,6 +162,7 @@ class User implements UserInterface, \Serializable
     {
         $this->coments = new \Doctrine\Common\Collections\ArrayCollection();
         $this->histories = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->setKarma(0);
     }
 
     /**

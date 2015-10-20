@@ -46,7 +46,6 @@ class UserController extends Controller
             $user->setPassword($encoded);
 
             $user->setGender($request->get('_gender'));
-            $user->setKarma(0);
 
             $em = $this->getDoctrine()->getManager();
 
