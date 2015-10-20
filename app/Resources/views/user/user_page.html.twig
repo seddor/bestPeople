@@ -14,6 +14,7 @@
             <div class="media-body">
                 <h4 class="media-heading">{{ user.username }}</h4>
                 <div id="karma">{{ user.karma }}</div>
+                {% if is_granted('ROLE_USER') %}
                 {% if app.user.username != user.username %}
                 <div class="btn-group" role="group">
                     <button id="add-down" type="button" class="btn btn-default">-</button>
@@ -21,6 +22,7 @@
                 </div>
                 {% else %}
                     <button type="button" class="btn btn-default">Изменить информацию о себе</button>
+                {% endif %}
                 {% endif %}
             </div>
         </div>
@@ -69,25 +71,17 @@
 
     <script type="text/javascript">
 
-        {% if complete is defined %}
+        {% if complete is not empty %}
             {% if complete.action == true %}
                 disableButton();
                 $('#add-up').addClass('btn-success');
             {% else %}
                 disableButton();
-                $('#add-down').addClass('btn-success');
+                $('#add-down').addClass('btn-danger');
             {% endif %}
         {% endif %}
 
         $('#add-up').click(function (){
-//                    alert('+');
-                    {#$.post('{{ path('update_karma') }}',#}
-                            {#{id: '{{ user.id}}', action:'+' },#}
-                        {#function(response){#}
-                            {#if(response.code == 100 && response.success) {#}
-                                {#alert('LOL');#}
-                            {#}#}
-                        {#})#}
                     $.ajax({
                         url: '{{ path('updateKarma') }}',
                         beforeSend: function(){
@@ -95,7 +89,6 @@
                         },
                         data: {id: {{ user.id}},action:'up'},
                         success: function(data){
-//                            $('#karma').html('1');
                             var obj = $.parseJSON(data);
                             $('#karma').html(obj.karma);
                             disableButton();
@@ -105,7 +98,6 @@
                 }
         );
         $('#add-down').click(function (){
-//                    alert('-');
                     $.ajax({
                         url: '{{ path('updateKarma') }}',
                         data: {id: {{ user.id}},action:'down'},
@@ -113,7 +105,7 @@
                             var obj = $.parseJSON(data);
                             $('#karma').html(obj.karma);
                             disableButton();
-                            $('#add-down').addClass('btn-success');
+                            $('#add-down').addClass('btn-danger');
                         }
                     })
                 }
@@ -123,6 +115,8 @@
             $('#add-down').attr('disabled','disabled');
             $('#add-up').attr('disabled','disabled');
         }
+
+
 
     </script>
 

@@ -12,6 +12,11 @@ class MainController extends Controller
      */
     public function indexAction()
     {
-        return $this->render('main.html.twig', array('users' => $this->getDoctrine()->getRepository('AppBundle:User')->findAll()));
+        $users = $this->getDoctrine()->getRepository('AppBundle:User')->findBy(
+            array(),
+            array('karma' => 'DESC')
+        );
+
+        return $this->render('main.html.twig', array('users' => $users));
     }
 }

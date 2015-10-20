@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class UserController extends Controller
 {
@@ -21,14 +22,14 @@ class UserController extends Controller
     {
         $user = $this->getDoctrine()->getRepository('AppBundle:User')->find($id);
         $complete = null;
-//        if($this->getUser()->getId() == $id)
-//            $complete = true;
-        foreach($this->getUser()->getHistoryByUser()->getValues() as $history) {
-            if($history->getAuthor()->getId() == $this->getUser()->getId()) {
-                $complete = $history;
+
+        if ($this->isGranted('ROLE_USER')) {
+            foreach($this->getUser()->getHistoryByUser()->getValues() as $history) {
+                if($history->getUser()->getId() == $user->getId()) {
+                    $complete = $history;
+                }
             }
         }
-
 
         return $this->render('user/user_page.html.twig', array(
             'user' => $user,
@@ -74,11 +75,17 @@ class UserController extends Controller
 //                $image->setPath($user->getId().'/'.$form->get('file')->getData()->getClientOriginalName());
                 $em->persist($image);
                 $em->flush();
+                $token = new UsernamePasswordToken($user, $user->getPassword(), 'database_users',$user->getRoles() );
+                $this->get('security.token_storage')->setToken($token);
+
                 return $this->redirectToRoute('main');
             }
 
             $em->persist($user);
             $em->flush();
+
+            $token = new UsernamePasswordToken($user, $user->getPassword(), 'database_users',$user->getRoles() );
+            $this->get('security.token_storage')->setToken($token);
 
             return $this->redirectToRoute('main');
         }
@@ -106,40 +113,5 @@ class UserController extends Controller
         return $this->redirectToRoute('userPage',array('id' => $id));
     }
 
-    /**
-     * @Security("has_role('ROLE_USER')")
-     * @Route("karma", name="updateKarma")
-     */
-    public function updateKarmaAction(){
-        $request = $this->container->get('request');
-        $user = $this->getDoctrine()->getRepository('AppBundle:User')->find($request->query->get('id'));
-        $history = new History();
 
-        if($request->query->get('action') === 'up') {
-            $user->setKarma($user->getKarma()+1);
-            $history->setAction(true);
-        }
-        else {
-            $user->setKarma($user->getKarma()-1);
-            $history->setAction(false);
-        }
-
-        $history->setUser($user);
-        $history->setAuthor($this->getUser());
-        $this->getUser()->addHistoryByUser($history);
-        $user->addHistory($history);
-
-        $em = $this->getDoctrine()->getManager();
-
-        $em->persist($history);
-        $em->persist($user);
-        $em->flush();
-
-        $response = array('code' => 100, 'success' => true, 'karma' => $user->getKarma());
-
-        return new Response(json_encode($response));
-
-
-
-    }
 }

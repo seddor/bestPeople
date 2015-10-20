@@ -19,7 +19,7 @@ class Image extends BaseEntity
     /**
      * @Assert\Image(
      *      maxSize="5M",
-     *      mimeTypes="image/png"
+     *      mimeTypes={"image/png","image/jpeg","image/gif"}
      * )
      */
     private $file;
