@@ -10,9 +10,13 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 class UserController extends Controller
 {
-    public function indexAction($name)
+    /**
+     * @Route("/id{id}", name="userPage")
+     */
+    public function indexAction($id)
     {
-        return $this->render('', array('name' => $name));
+        return $this->render('user/user_page.html.twig', array(
+            'user' => $this->getDoctrine()->getRepository('AppBundle:User')->find($id)));
     }
 
     /**
@@ -35,13 +39,11 @@ class UserController extends Controller
         if($form->isValid()) {
             $user = new User();
             $user->setUsername(mb_strtolower($request->get('_username')));
-//            //pas
+            //pas
             $plainPassword = $request->get('_password');
             $encoder = $this->container->get('security.password_encoder');
             $encoded = $encoder->encodePassword($user, $plainPassword);
             $user->setPassword($encoded);
-
-//            $user->setPassword($request->get('_password'));
 
             $user->setGender($request->get('_gender'));
             $user->setKarma(0);
@@ -66,7 +68,12 @@ class UserController extends Controller
         }
 
         return $this->render(':user:registration.html.twig', array('imageForm' => $form->createView()));
+    }
 
+    /**
+     * @Route("id{id}/writeComment", name="commentFormAction")
+     */
+    public function commentAction($id, Request $request) {
 
     }
 }
