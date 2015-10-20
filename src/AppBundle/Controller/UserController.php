@@ -20,6 +20,9 @@ class UserController extends Controller
      */
     public function registrationAction(Request $request)
     {
+        if($this->isGranted('ROLE_USER'))
+            return $this->redirectToRoute('main');
+
         $image = new Image();
         $form = $this->createFormBuilder($image)
             ->add('file','file',array(
@@ -33,12 +36,12 @@ class UserController extends Controller
             $user = new User();
             $user->setUsername(mb_strtolower($request->get('_username')));
 //            //pas
-//            $plainPassword = $request->get('_password');
-//            $encoder = $this->container->get('security.password_encoder');
-//            $encoded = $encoder->encodePassword($user, $plainPassword);
-//            $user->setPassword($encoded);
+            $plainPassword = $request->get('_password');
+            $encoder = $this->container->get('security.password_encoder');
+            $encoded = $encoder->encodePassword($user, $plainPassword);
+            $user->setPassword($encoded);
 
-            $user->setPassword($request->get('_password'));
+//            $user->setPassword($request->get('_password'));
 
             $user->setGender($request->get('_gender'));
             $user->setKarma(0);
@@ -62,7 +65,7 @@ class UserController extends Controller
             return $this->redirectToRoute('main');
         }
 
-        return $this->render('registration.html.twig', array('imageForm' => $form->createView()));
+        return $this->render(':user:registration.html.twig', array('imageForm' => $form->createView()));
 
 
     }

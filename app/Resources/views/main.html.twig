@@ -5,8 +5,12 @@
     <div class="page-header">
         <h1>Лучшие люди интернета</h1>
         <div align="right">
-            <button type="button" class="btn btn-lg btn-primary">Войти</button>
-            <a href={{ path('registration') }}><button type="button" class="btn btn-lg btn-default">Зарегистрироваться</button></a>
+            {% if is_granted('ROLE_USER') %}
+                <a href={{ path('_logout') }} ><button type="button" class="btn btn-lg btn-primary">Выйти</button></a>
+            {% else %}
+                <a href={{ path('login_form') }} ><button type="button" class="btn btn-lg btn-primary">Войти</button></a>
+                <a href={{ path('registration') }}><button type="button" class="btn btn-lg btn-default">Зарегистрироваться</button></a>
+            {% endif %}
         </div>
     </div>
     </div>
