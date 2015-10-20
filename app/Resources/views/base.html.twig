@@ -12,6 +12,15 @@
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     </head>
     <body>
+        {% block header %}
+        <header>
+            <div class="container">
+                <div class="page-header">
+                    <a href="{{ path('main') }}"><h1>Лучшие люди интернета</h1></a>
+                </div>
+            </div>
+        </header>
+        {% endblock %}
         {% block body %}
         {% endblock %}
     </body>

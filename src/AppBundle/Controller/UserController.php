@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Comment;
 use AppBundle\Entity\Image;
 use AppBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -73,6 +74,19 @@ class UserController extends Controller
      * @Route("id{id}/writeComment", name="commentFormAction")
      */
     public function commentAction($id, Request $request) {
+        $comment = new Comment();
 
+        $comment->setText($request->get('_comment'));
+        $comment->setAuthor($this->getUser());
+        $user = $this->getDoctrine()->getRepository('AppBundle:User')->find($id);
+        $comment->setUser($user);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($this->getUser());
+        $em->persist($user);
+        $em->persist($comment);
+        $em->flush();
+
+        return $this->redirectToRoute('userPage',array('id' => $id));
     }
 }

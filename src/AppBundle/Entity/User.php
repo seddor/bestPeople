@@ -46,6 +46,12 @@ class User implements UserInterface, \Serializable
     private $coments;
 
     /**
+     * @ORM\OneToMany(targetEntity="Comment",mappedBy="author")
+     */
+    private $commentByUser;
+
+
+    /**
      * @ORM\OneToMany(targetEntity="History",mappedBy="user")
      */
     private $histories;
@@ -350,4 +356,38 @@ class User implements UserInterface, \Serializable
     }
 
 
+
+    /**
+     * Add commentByUser
+     *
+     * @param \AppBundle\Entity\Comment $commentByUser
+     *
+     * @return User
+     */
+    public function addCommentByUser(\AppBundle\Entity\Comment $commentByUser)
+    {
+        $this->commentByUser[] = $commentByUser;
+
+        return $this;
+    }
+
+    /**
+     * Remove commentByUser
+     *
+     * @param \AppBundle\Entity\Comment $commentByUser
+     */
+    public function removeCommentByUser(\AppBundle\Entity\Comment $commentByUser)
+    {
+        $this->commentByUser->removeElement($commentByUser);
+    }
+
+    /**
+     * Get commentByUser
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCommentByUser()
+    {
+        return $this->commentByUser;
+    }
 }

@@ -25,6 +25,20 @@ class Comment extends BaseEntity
      */
     private $user;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="User",inversedBy="commentByUser",fetch="LAZY")
+     * @ORM\JoinColumn(name="author_id",referencedColumnName="id")
+     */
+    private $author;
+
+    /**
+     * Comment constructor.
+     */
+    public function __construct()
+    {
+        $this->setDate(new \DateTime(date('d.m.Y')));
+    }
+
 
     /**
      * Set text
@@ -96,5 +110,29 @@ class Comment extends BaseEntity
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * Set author
+     *
+     * @param \AppBundle\Entity\User $author
+     *
+     * @return Comment
+     */
+    public function setAuthor(\AppBundle\Entity\User $author = null)
+    {
+        $this->author = $author;
+
+        return $this;
+    }
+
+    /**
+     * Get author
+     *
+     * @return \AppBundle\Entity\User
+     */
+    public function getAuthor()
+    {
+        return $this->author;
     }
 }
