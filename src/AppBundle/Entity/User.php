@@ -57,6 +57,11 @@ class User implements UserInterface, \Serializable
     private $histories;
 
     /**
+     * @ORM\OneToMany(targetEntity="History",mappedBy="author")
+     */
+    private $historyByUser;
+
+    /**
      * @ORM\OneToOne(targetEntity="Image",cascade={"all"},orphanRemoval=true,fetch="LAZY")
      * @ORM\JoinColumn(name="image_id",referencedColumnName="id",nullable=true)
      */
@@ -308,11 +313,11 @@ class User implements UserInterface, \Serializable
     /**
      * Add history
      *
-     * @param \AppBundle\Entity\Comment $history
+     * @param \AppBundle\Entity\History $history
      *
      * @return User
      */
-    public function addHistory(\AppBundle\Entity\Comment $history)
+    public function addHistory(\AppBundle\Entity\History $history)
     {
         $this->histories[] = $history;
 
@@ -322,9 +327,9 @@ class User implements UserInterface, \Serializable
     /**
      * Remove history
      *
-     * @param \AppBundle\Entity\Comment $history
+     * @param \AppBundle\Entity\History $history
      */
-    public function removeHistory(\AppBundle\Entity\Comment $history)
+    public function removeHistory(\AppBundle\Entity\History $history)
     {
         $this->histories->removeElement($history);
     }
@@ -389,5 +394,39 @@ class User implements UserInterface, \Serializable
     public function getCommentByUser()
     {
         return $this->commentByUser;
+    }
+
+    /**
+     * Add historyByUser
+     *
+     * @param \AppBundle\Entity\History $historyByUser
+     *
+     * @return User
+     */
+    public function addHistoryByUser(\AppBundle\Entity\History $historyByUser)
+    {
+        $this->historyByUser[] = $historyByUser;
+
+        return $this;
+    }
+
+    /**
+     * Remove historyByUser
+     *
+     * @param \AppBundle\Entity\History $historyByUser
+     */
+    public function removeHistoryByUser(\AppBundle\Entity\History $historyByUser)
+    {
+        $this->historyByUser->removeElement($historyByUser);
+    }
+
+    /**
+     * Get historyByUser
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getHistoryByUser()
+    {
+        return $this->historyByUser;
     }
 }

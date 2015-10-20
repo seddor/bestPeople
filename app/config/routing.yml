@@ -4,3 +4,7 @@ app:
 
 _logout:
         path:   /logout
+
+#update_karma:
+#    pattern:  /update/data/from/ajax/call
+#    defaults: { _controller: AppBundle:User:updateKarma }

@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 class History extends BaseEntity
 {
     /**
-     * @ORM\Column(type="string",length=10)
+     * @ORM\Column(type="boolean")
      */
     private $action;
 
@@ -24,6 +24,20 @@ class History extends BaseEntity
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private $user;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="User",inversedBy="historyByUser",fetch="LAZY")
+     * @ORM\JoinColumn(name="author_id", referencedColumnName="id")
+     */
+    private $author;
+
+    /**
+     * History constructor.
+     */
+    public function __construct()
+    {
+        $this->setDate(new \DateTime(date('d.m.Y')));
+    }
 
 
     /**
@@ -96,5 +110,29 @@ class History extends BaseEntity
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * Set author
+     *
+     * @param \AppBundle\Entity\User $author
+     *
+     * @return History
+     */
+    public function setAuthor(\AppBundle\Entity\User $author = null)
+    {
+        $this->author = $author;
+
+        return $this;
+    }
+
+    /**
+     * Get author
+     *
+     * @return \AppBundle\Entity\User
+     */
+    public function getAuthor()
+    {
+        return $this->author;
     }
 }

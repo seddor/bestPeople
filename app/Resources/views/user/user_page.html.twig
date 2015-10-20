@@ -13,18 +13,45 @@
             </div>
             <div class="media-body">
                 <h4 class="media-heading">{{ user.username }}</h4>
-                {{ user.karma }}
+                <div id="karma">{{ user.karma }}</div>
+                {% if app.user.username != user.username %}
+                <div class="btn-group" role="group">
+                    <button id="add-down" type="button" class="btn btn-default">-</button>
+                    <button id="add-up" type="button" class="btn btn-default">+</button>
+                </div>
+                {% else %}
+                    <button type="button" class="btn btn-default">Изменить информацию о себе</button>
+                {% endif %}
             </div>
         </div>
         <div class="container">
             <h4>История</h4>
+            {% for history in user.histories %}
+                {% if history.user.gender == 'male' %}
+                    {% if history.action == true %}
+                        <div class="alert alert-success" role="alert"> {{ history.date|date("d.m.Y") }}
+                            <a href={{ path('userPage',{'id':history.author.id}) }}>{{  history.author.username }}</a> поставил +</div>
+                    {% else %}
+                        <div class="alert alert-danger" role="alert"> {{ history.date|date("d.m.Y") }}
+                            <a href={{ path('userPage',{'id':history.author.id}) }}>{{  history.author.username }}</a> поставил -</div>
+                    {% endif %}
+                {% else %}
+                    {% if history.action == true %}
+                        <div class="alert alert-success" role="alert"> {{ history.date|date("d.m.Y") }}
+                            <a href={{ path('userPage',{'id':history.author.id}) }}>{{  history.author.username }}</a> поставила +</div>
+                    {% else %}
+                        <div class="alert alert-danger" role="alert"> {{ history.date|date("d.m.Y") }}
+                            <a href={{ path('userPage',{'id':history.author.id}) }}>{{  history.author.username }}</a> поставила -</div>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
         </div>
         <div class="container">
             <h4>Комментарии</h4>
             {% for comment in user.coments %}
             <div class="container">
                 <div class="well">{{ comment.text }}</div>
-                <p>{{ comment.author.username }} {{ comment.date|date("d.m.Y") }}</p>
+                <p><a href={{ path('userPage',{'id':comment.author.id}) }}>{{ comment.author.username }}</a> {{ comment.date|date("d.m.Y") }}</p>
             </div>
             {% endfor %}
             {% if is_granted('ROLE_USER') %}
@@ -38,7 +65,65 @@
             </div>
             {% endif %}
         </div>
-
-
     </div>
+
+    <script type="text/javascript">
+
+        {% if complete is defined %}
+            {% if complete.action == true %}
+                disableButton();
+                $('#add-up').addClass('btn-success');
+            {% else %}
+                disableButton();
+                $('#add-down').addClass('btn-success');
+            {% endif %}
+        {% endif %}
+
+        $('#add-up').click(function (){
+//                    alert('+');
+                    {#$.post('{{ path('update_karma') }}',#}
+                            {#{id: '{{ user.id}}', action:'+' },#}
+                        {#function(response){#}
+                            {#if(response.code == 100 && response.success) {#}
+                                {#alert('LOL');#}
+                            {#}#}
+                        {#})#}
+                    $.ajax({
+                        url: '{{ path('updateKarma') }}',
+                        beforeSend: function(){
+                            $('#karma').html('<img class="media-object" src={{ asset('images/ajax-loader.gif') }}>');
+                        },
+                        data: {id: {{ user.id}},action:'up'},
+                        success: function(data){
+//                            $('#karma').html('1');
+                            var obj = $.parseJSON(data);
+                            $('#karma').html(obj.karma);
+                            disableButton();
+                            $('#add-up').addClass('btn-success');
+                        }
+                    })
+                }
+        );
+        $('#add-down').click(function (){
+//                    alert('-');
+                    $.ajax({
+                        url: '{{ path('updateKarma') }}',
+                        data: {id: {{ user.id}},action:'down'},
+                        success: function(data){
+                            var obj = $.parseJSON(data);
+                            $('#karma').html(obj.karma);
+                            disableButton();
+                            $('#add-down').addClass('btn-success');
+                        }
+                    })
+                }
+        )
+
+        function disableButton() {
+            $('#add-down').attr('disabled','disabled');
+            $('#add-up').attr('disabled','disabled');
+        }
+
+    </script>
+
 {% endblock %}
