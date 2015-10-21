@@ -1,0 +1,20 @@
+<h4>История</h4>
+{% for history in histories %}
+    {% if history.author.gender == 'male' %}
+        {% if history.action == true %}
+            <div class="alert alert-success" role="alert"> {{ history.date|date("d.m.Y") }}
+                <a href={{ path('userPage',{'id':history.author.id}) }}>{{  history.author.username }}</a> поставил +</div>
+        {% else %}
+            <div class="alert alert-danger" role="alert"> {{ history.date|date("d.m.Y") }}
+                <a href={{ path('userPage',{'id':history.author.id}) }}>{{  history.author.username }}</a> поставил -</div>
+        {% endif %}
+    {% else %}
+        {% if history.action == true %}
+            <div class="alert alert-success" role="alert"> {{ history.date|date("d.m.Y") }}
+                <a href={{ path('userPage',{'id':history.author.id}) }}>{{  history.author.username }}</a> поставила +</div>
+        {% else %}
+            <div class="alert alert-danger" role="alert"> {{ history.date|date("d.m.Y") }}
+                <a href={{ path('userPage',{'id':history.author.id}) }}>{{  history.author.username }}</a> поставила -</div>
+        {% endif %}
+    {% endif %}
+{% endfor %}

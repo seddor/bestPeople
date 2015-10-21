@@ -32,6 +32,17 @@ class AjaxController extends Controller
     }
 
     /**
+     * @Route("history", name="updateHistory")
+     */
+    public function updateHistoryAction(Request $request){
+
+        $template = $this->forward('AppBundle:User:history',array('id' => $request->get('id')))->getContent();
+        $response = new Response(json_encode($template), 200);
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
+    }
+
+    /**
      * @Route("top", name="updateTop")
      */
     public function updateTopAction(Request $request){

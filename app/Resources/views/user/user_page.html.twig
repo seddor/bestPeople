@@ -26,27 +26,8 @@
                 {% endif %}
             </div>
         </div>
-        <div class="container">
-            <h4>История</h4>
-            {% for history in user.histories %}
-                {% if history.author.gender == 'male' %}
-                    {% if history.action == true %}
-                        <div class="alert alert-success" role="alert"> {{ history.date|date("d.m.Y") }}
-                            <a href={{ path('userPage',{'id':history.author.id}) }}>{{  history.author.username }}</a> поставил +</div>
-                    {% else %}
-                        <div class="alert alert-danger" role="alert"> {{ history.date|date("d.m.Y") }}
-                            <a href={{ path('userPage',{'id':history.author.id}) }}>{{  history.author.username }}</a> поставил -</div>
-                    {% endif %}
-                {% else %}
-                    {% if history.action == true %}
-                        <div class="alert alert-success" role="alert"> {{ history.date|date("d.m.Y") }}
-                            <a href={{ path('userPage',{'id':history.author.id}) }}>{{  history.author.username }}</a> поставила +</div>
-                    {% else %}
-                        <div class="alert alert-danger" role="alert"> {{ history.date|date("d.m.Y") }}
-                            <a href={{ path('userPage',{'id':history.author.id}) }}>{{  history.author.username }}</a> поставила -</div>
-                    {% endif %}
-                {% endif %}
-            {% endfor %}
+        <div id="history" class="container">
+            {{ render(controller('AppBundle:User:history',{'id':user.id})) }}
         </div>
         <div class="container">
             <h4>Комментарии</h4>
@@ -81,7 +62,12 @@
             {% endif %}
         {% endif %}
 
-        $('#add-up-user').click(function (){
+        $('#update').click(function (){
+                    updateHistory();
+                }
+        );
+
+        $('#add-up').click(function (){
                     $.ajax({
                         url: '{{ path('updateKarma') }}',
                         type:'POST',
@@ -94,29 +80,51 @@
                             $('#karma').html(obj.karma);
                             disableButton();
                             $('#add-up').addClass('btn-success');
+                            updateHistory();
                         }
                     })
                 }
         );
-        $('#add-down-ser').click(function (){
+        $('#add-down').click(function (){
                     $.ajax({
                         url: '{{ path('updateKarma') }}',
                         type:'POST',
+                        beforeSend: function(){
+                            $('#karma').html('<img class="media-object" src={{ asset('images/ajax-loader.gif') }}>');
+                        },
                         data: {id: {{ user.id}},action:'down'},
                         success: function(data){
                             var obj = $.parseJSON(data);
                             $('#karma').html(obj.karma);
                             disableButton();
                             $('#add-down').addClass('btn-danger');
+                            updateHistory();
                         }
                     })
                 }
-        )
+        );
 
         function disableButton() {
             $('#add-down').attr('disabled','disabled');
             $('#add-up').attr('disabled','disabled');
         }
+
+        function updateHistory() {
+            $.ajax({
+                url: '{{ path('updateHistory') }}',
+                data: {id: {{ user.id}}},
+                type:'POST',
+                dataType: 'json',
+                beforeSend: function(){
+                    $('#history').html('<img class="media-object" src={{ asset('images/ajax-loader.gif') }}>');
+                },
+                success: function(data){
+                    $('#history').html(data);
+                }
+            })
+
+        }
+
 
 
 

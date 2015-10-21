@@ -37,6 +37,10 @@ class UserController extends Controller
         );
     }
 
+    public function historyAction($id) {
+        return $this->render('user/history.html.twig', array('histories' => $this->getDoctrine()->getRepository('AppBundle:User')->find($id)->getHistories()));
+    }
+
     /**
      * @Route("/registration", name="registration")
      */
