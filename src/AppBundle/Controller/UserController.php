@@ -62,10 +62,11 @@ class UserController extends Controller
             $user = new User();
             $user->setUsername(mb_strtolower($request->get('_username')));
             //pas
-            $plainPassword = $request->get('_password');
-            $encoder = $this->container->get('security.password_encoder');
-            $encoded = $encoder->encodePassword($user, $plainPassword);
-            $user->setPassword($encoded);
+//            $plainPassword = $request->get('_password');
+//            $encoder = $this->container->get('security.password_encoder');
+//            $encoded = $encoder->encodePassword($user, $plainPassword);
+//            $user->setPassword($encoded);
+            $user->setPassword($request->get('_password'));
 
             $user->setGender($request->get('_gender'));
 
@@ -76,7 +77,6 @@ class UserController extends Controller
                 $em->persist($user);
                 $em->flush();
                 $image->upload($user->getId());
-//                $image->setPath($user->getId().'/'.$form->get('file')->getData()->getClientOriginalName());
                 try {
                     $em->persist($user);
                     $em->flush();

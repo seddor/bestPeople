@@ -18,7 +18,8 @@
             </div>
 
             <div class="input-group">
-                <input type="password" class="form-control" name="_password" placeholder="Пароль" pattern="[A-Za-z]{6,25}" aria-describedby="basic-addon1" required>
+                <input type="password" id="password" class="form-control" name="_password" placeholder="Пароль" pattern="/([A-Za-z]{4,}[0-9]+){5,25}$/" aria-describedby="basic-addon1" required>
+                <button type="button" onclick="showPassword()" class="btn btn-default">Показать пароль</button>
             </div>
 
             <div class="input-group">
@@ -34,4 +35,12 @@
         </form>
 
     </div>
+
+    <script>
+
+        function showPassword() {
+            $('password').attr({'type':'text'});
+        }
+
+    </script>
 {% endblock %}
