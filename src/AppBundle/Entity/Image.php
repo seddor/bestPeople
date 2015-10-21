@@ -71,5 +71,15 @@ class Image extends BaseEntity
         $this->file = null;
     }
 
+    /**
+     * @ORM\PostRemove()
+     */
+    public function removeUpload()
+    {
+        $file = $this->getAbsolutePath();
+        if ($file) {
+            unlink($file);
+        }
+    }
 
 }

@@ -21,7 +21,7 @@
                     <button id="add-up" type="button" class="btn btn-default">+</button>
                 </div>
                 {% else %}
-                    <button type="button" class="btn btn-default">Изменить информацию о себе</button>
+                    <a href={{ path('editUser',{'id':user.id}) }}><button type="button" class="btn btn-default">Изменить информацию о себе</button></a>
                 {% endif %}
                 {% endif %}
             </div>

@@ -1,24 +1,5 @@
 {% extends 'base.html.twig' %}
 
-
-        {% block header %}
-            <header>
-                <div class="container">
-                    <div class="page-header">
-                        <a href="{{ path('main') }}"><h1>Лучшие люди интернета</h1></a>
-                        <div align="right">
-                            {% if is_granted('ROLE_USER') %}
-                                <a href={{ path('_logout') }} ><button type="button" class="btn btn-lg btn-primary">Выйти</button></a>
-                            {% else %}
-                                <a href={{ path('login_form') }} ><button type="button" class="btn btn-lg btn-primary">Войти</button></a>
-                                <a href={{ path('registration') }}><button type="button" class="btn btn-lg btn-default">Зарегистрироваться</button></a>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-            </header>
-        {% endblock %}
-
 {% block body %}
     <div id="user-top" class="container">
     {{ render(controller('AppBundle:Main:top'))}}

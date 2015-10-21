@@ -19,7 +19,8 @@ class MainController extends Controller
     {
         $users = $this->getDoctrine()->getRepository('AppBundle:User')->findBy(
             array(),
-            array('karma' => 'DESC')
+            array('karma' => 'DESC'),
+            15
         );
 
         return $this->render(':user:top.html.twig', array('users' => $users));

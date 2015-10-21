@@ -77,8 +77,14 @@ class UserController extends Controller
                 $em->flush();
                 $image->upload($user->getId());
 //                $image->setPath($user->getId().'/'.$form->get('file')->getData()->getClientOriginalName());
-                $em->persist($image);
-                $em->flush();
+                try {
+                    $em->persist($user);
+                    $em->flush();
+                } catch(\Exception $e) {
+                    $error = 'Логин уже занят';
+                    return $this->render('user/registration.html.twig', array('error' => $error,'imageForm' => $form->createView()));
+                }
+
                 $token = new UsernamePasswordToken($user, $user->getPassword(), 'database_users',$user->getRoles() );
                 $this->get('security.token_storage')->setToken($token);
 
@@ -88,8 +94,14 @@ class UserController extends Controller
                 return $this->redirectToRoute('main');
             }
 
-            $em->persist($user);
-            $em->flush();
+            try {
+                $em->persist($user);
+                $em->flush();
+            } catch(\Exception $e) {
+                $error = 'Логин уже занят';
+                return $this->render('user/registration.html.twig', array('error' => $error,'imageForm' => $form->createView()));
+            }
+
 
             $token = new UsernamePasswordToken($user, $user->getPassword(), 'database_users',$user->getRoles() );
             $this->get('security.token_storage')->setToken($token);
@@ -118,6 +130,51 @@ class UserController extends Controller
         $em->flush();
 
         return $this->redirectToRoute('userPage',array('id' => $id));
+    }
+
+    /**
+     * @Route("id{id}/edit", name="editUser")
+     */
+    public function editAction($id, Request $request) {
+        $user = $this->getDoctrine()->getRepository('AppBundle:User')->find($id);
+
+        $image = new Image();
+        $form = $this->createFormBuilder($image)
+            ->add('file','file',array(
+                'required' => false
+            ))
+            ->getForm();
+
+        $form->handleRequest($request);
+
+        if($form->isValid()) {
+            $user->setGender($request->get('_gender'));
+
+            $em = $this->getDoctrine()->getManager();
+
+            if (!$form->get('file')->isEmpty()) {
+                $user->getAvatar()->removeUpload();
+                $user->setAvatar($image);
+                $em->persist($user);
+                $em->flush();
+                $image->upload($user->getId());
+                $em->persist($image);
+                $em->flush();
+
+                $this->get('image.handling')->open($image->getAbsolutePath())
+                    ->resize(50, 50)->save($image->getAbsolutePath());
+
+                return $this->redirectToRoute('userPage',array('id' => $user->getId()));
+            }
+
+            $em->persist($user);
+            $em->flush();
+
+            return $this->redirectToRoute('userPage',array('id' => $user->getId()));
+        }
+
+
+        return $this->render(':user:edit_user.html.twig',array('user' => $user,'imageForm' => $form->createView()));
     }
 
 

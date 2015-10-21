@@ -1,7 +1,31 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+<div class="container">
+    <h2>Мой профиль</h2>
+    <form id="loginForm" autocomplete="off" action="{{ path('editUser',{'id':user.id}) }}" {{ form_enctype(imageForm) }}"
+          method="post" name="loginForm">
 
+        <div class="input-group">
+            <label for="login">Мой логин:</label>
+            <div id="login"> {{ user.username }} </div>
+        </div>
+
+        <div class="input-group">
+            <label for="gender">Пол:</label>
+            <select id="gender" name="_gender">
+                <option value="male" {% if user.gender == 'male' %} selected {% endif %}>Мужской</option>
+                <option value="female" {% if user.gender == 'female' %} selected {% endif %}>Женский</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+        {{ form_widget(imageForm) }}
+        </div>
+
+        <button type="submit" class="btn btn-default">Сохранить</button>
+    </form>
+</div>
 
 
 {% endblock %}

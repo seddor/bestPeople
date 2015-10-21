@@ -1,0 +1,19 @@
+<div class="container">
+    <div class="page-header">
+        <a href="{{ path('main') }}"><h1>Лучшие люди интернета</h1></a>
+        <div align="right">
+            {% if is_granted('ROLE_USER') %}
+                Привет, <a href={{ path('userPage',{'id':app.user.id}) }}>{{ app.user.username }}</a>
+                {% if app.user.avatar is not empty %}
+                    <img src="{{ app.user.avatar.WebPatch }}">
+                {% else %}
+                    <img src="{{ asset('images/avatar.png') }}">
+                {% endif %}
+                <a href={{ path('_logout') }} ><button type="button" class="btn btn-lg btn-primary">Выйти</button></a>
+            {% else %}
+                <a href={{ path('login_form') }} ><button type="button" class="btn btn-lg btn-primary">Войти</button></a>
+                <a href={{ path('registration') }}><button type="button" class="btn btn-lg btn-default">Зарегистрироваться</button></a>
+            {% endif %}
+        </div>
+    </div>
+</div>
