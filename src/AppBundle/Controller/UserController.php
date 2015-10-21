@@ -78,6 +78,9 @@ class UserController extends Controller
                 $token = new UsernamePasswordToken($user, $user->getPassword(), 'database_users',$user->getRoles() );
                 $this->get('security.token_storage')->setToken($token);
 
+                $this->get('image.handling')->open($image->getAbsolutePath())
+                    ->resize(50, 50)->save($image->getAbsolutePath());
+
                 return $this->redirectToRoute('main');
             }
 

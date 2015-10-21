@@ -20,49 +20,42 @@
         {% endblock %}
 
 {% block body %}
-    <button type="button" class="btn btn-lg btn-info">Обновить!</button>
+    <div id="user-top" class="container">
+    {{ render(controller('AppBundle:Main:top'))}}
     </div>
-    <div class="container">
-        <div class="list-group">
-            {% for user in users %}
-            <a href={{ path('userPage', {'id':user.id}) }} class="list-group-item">
-            {% if user.avatar is not empty %}
-                        <img src="{{ user.avatar.WebPatch }}" align="right" width="50" height="25">
-                    {% else %}
-                        <img src="{{ asset('images/avatar.png') }}" align="right" width="25" height="50">
-                    {% endif %}
-                    {% if is_granted("ROLE_USER") %}
-                        {% if app.user.username == user.username %}
-                            Ю!
-                        {% endif %}
-                    {% endif %}
-                <h4 class="list-group-item-heading">{{ user.username }}</h4>
-                <p class="list-group-item-text">{{ user.karma }}
-                {% if is_granted("ROLE_USER") and app.user.username != user.username %}
-                <div class="btn-group" role="group">
-                    <button id="add-down" type="button" class="btn btn-default">-</button>
-                    <button id="add-up" type="button" class="btn btn-default">+</button>
-                </div>
-                {% endif %}
-                </p>
-            </a>
-            {% endfor %}
-        </div>
-    </div>
+
 
     <script type="text/javascript">
-    $('#add-up').click(function (){
-                    $.ajax({
-                        url: '{{ path('updateTop') }}',
-                        beforeSend: function(){
-                            $('#karma').html('<img class="media-object" src={{ asset('images/ajax-loader.gif') }}>');
-                        },
-                        success: function(data){
-
-                        }
-                    })
+        function addUp(id) {
+            $.ajax({
+                url: '{{ path('updateTop') }}',
+                data: {id: id,action:'up'},
+                type: 'POST',
+                dataType: 'json',
+                beforeSend: function(){
+                    $('#user-top').html('<div align="center"><img class="media-object" src={{ asset('images/ajax-loader.gif') }}></div>');
+                },
+                success: function(data){
+                    $('#user-top').html(data);
                 }
-        );
+            })
+        }
+
+        function addDown(id) {
+            $.ajax({
+                url: '{{ path('updateTop') }}',
+                data: {id: id,action:'down'},
+                type: 'POST',
+                dataType: 'json',
+                beforeSend: function(){
+                    $('#user-top').html('<div align="center"><img class="media-object" src={{ asset('images/ajax-loader.gif') }}></div>');
+                },
+                success: function(data){
+                    $('#user-top').html(data);
+                }
+            })
+        }
+
 
     </script>
 {% endblock %}

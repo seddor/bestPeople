@@ -1,0 +1,74 @@
+<div class="list-group" xmlns="http://www.w3.org/1999/html">
+    {% for user in users %}
+        <div class="list-group-item">
+            <a  href={{ path('userPage', {'id':user.id}) }}>
+                    <div>
+            {% if user.avatar is not empty %}
+                <img src="{{ user.avatar.WebPatch }}" align="right">
+            {% else %}
+                <img src="{{ asset('images/avatar.png') }}" align="right">
+            {% endif %}
+                    </div>
+            {% if is_granted("ROLE_USER") %}
+                {% if app.user.username == user.username %}
+                    Ю!
+                {% endif %}
+            {% endif %}
+                <div>
+            <h4 class="list-group-item-heading">{{ user.username }}</h4>
+            <p class="list-group-item-text" >{{ user.karma }}
+                </div>
+            </a>
+                {% if is_granted("ROLE_USER") and app.user.username != user.username %}
+            <div align="right">
+                {% for history in app.user.historyByUser if history.user.id == user.id %}
+                {% if history.action == true %}
+
+            <div class="btn-group-vertical" role="group">
+                <button id="add-down" onclick="addDown({{ user.id }})" type="button" class="btn btn-default" disabled>-</button>
+                <button id="add-up" onclick="addUp({{ user.id }})" type="button" class="btn btn-success" disabled>+</button>
+            </div>
+        {% else %}
+            <div class="btn-group-vertical" role="group">
+                <button id="add-down" onclick="addDown({{ user.id }})" type="button" class="btn btn-danger" disabled>-</button>
+                <button id="add-up" onclick="addUp({{ user.id }})" type="button" class="btn btn-default" disabled>+</button>
+            </div>
+            {% endif %}
+        {% else %}
+            <div class="btn-group-vertical" role="group">
+                <button id="add-down" onclick="addDown({{ user.id }})" type="button" class="btn btn-default">-</button>
+                <button id="add-up" onclick="addUp({{ user.id }})" type="button" class="btn btn-default">+</button>
+            </div>
+
+            {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+
+    {#{% if is_granted("ROLE_USER") %}#}
+            {#{% for history in app.user.historyByUser %}#}
+                {#{% if history.user.id == user.id %}#}
+                    {#{% if history.action == true %}#}
+                        {#<script type="text/javascript">#}
+                        {#disableButton();#}
+                        {#$('#add-up').addClass('btn-success');#}
+                        {#</script>#}
+                    {#{% else %}#}
+                        {#<script type="text/javascript">#}
+                        {#disableButton();#}
+                        {#$('#add-down').addClass('btn-danger');#}
+                        {#</script>#}
+                    {#{% endif %}#}
+                {#{% endif %}#}
+            {#{% endfor %}#}
+        {#<script type="text/javascript">#}
+            {#function disableButton() {#}
+                {#$('#add-down').attr('disabled','disabled');#}
+                {#$('#add-up').attr('disabled','disabled');#}
+            {#}#}
+
+        {#</script>#}
+    {#{% endif %}#}
+    {% endfor %}
+</div>
+

@@ -21,11 +21,17 @@ class SecurityController extends Controller
         $error = $authenticationUtils->getLastAuthenticationError();
 
         $lastUserName = $authenticationUtils->getLastUsername();
+//
+//        $captchaForm = $this->createFormBuilder()
+//            ->add('captcha','captcha')->getForm();
+//
+
 
         return $this->render(':user:login.html.twig',
             array(
                 'last_username' => $lastUserName,
                 'error' => $error,
+//                'captcha' => $captchaForm->createView(),
             )
         );
     }

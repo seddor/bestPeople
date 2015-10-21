@@ -29,7 +29,7 @@
         <div class="container">
             <h4>История</h4>
             {% for history in user.histories %}
-                {% if history.user.gender == 'male' %}
+                {% if history.author.gender == 'male' %}
                     {% if history.action == true %}
                         <div class="alert alert-success" role="alert"> {{ history.date|date("d.m.Y") }}
                             <a href={{ path('userPage',{'id':history.author.id}) }}>{{  history.author.username }}</a> поставил +</div>
@@ -81,9 +81,10 @@
             {% endif %}
         {% endif %}
 
-        $('#add-up').click(function (){
+        $('#add-up-user').click(function (){
                     $.ajax({
                         url: '{{ path('updateKarma') }}',
+                        type:'POST',
                         beforeSend: function(){
                             $('#karma').html('<img class="media-object" src={{ asset('images/ajax-loader.gif') }}>');
                         },
@@ -97,9 +98,10 @@
                     })
                 }
         );
-        $('#add-down').click(function (){
+        $('#add-down-ser').click(function (){
                     $.ajax({
                         url: '{{ path('updateKarma') }}',
+                        type:'POST',
                         data: {id: {{ user.id}},action:'down'},
                         success: function(data){
                             var obj = $.parseJSON(data);
