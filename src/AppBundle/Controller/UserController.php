@@ -203,6 +203,10 @@ class UserController extends Controller
         $em = $this->getDoctrine()->getManager();
         foreach($user->getHistories()->getValues() as $history) {
             if($history->getAuthor()->getId() == $this->getUser()->getId()) {
+                if($history->getAction()) {
+                    $user->setKarma($user->getKarma()-1);
+                }else
+                    $user->setKarma($user->getKarma()+1);
                 $user->removeHistory($history);
                 $this->getUser()->removeHistoryByUser($history);
                 $em->remove($history);
