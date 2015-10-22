@@ -19,10 +19,13 @@
                 <div class="btn-group" role="group">
                     <button id="add-down" type="button" class="btn btn-default">-</button>
                     <button id="add-up" type="button" class="btn btn-default">+</button>
+                </div>
+                        <div id="cancel">
                     {% if complete is not empty %}
                         <a href={{ path('cancelVote',{'id':user.id}) }}><button type="button" class="btn btn-default">Отменить</button></a>
                     {% endif %}
-                </div>
+                        </div>
+
                 {% else %}
                     <a href={{ path('editUser',{'id':user.id}) }}><button type="button" class="btn btn-default">Изменить информацию о себе</button></a>
                 {% endif %}
@@ -81,6 +84,7 @@
                         success: function(data){
                             var obj = $.parseJSON(data);
                             $('#karma').html(obj.karma);
+                            $('#cancel').html('<a href={{ path('cancelVote',{'id':user.id}) }}><button type="button" class="btn btn-default">Отменить</button></a>');
                             disableButton();
                             $('#add-up').addClass('btn-success');
                             updateHistory();
@@ -99,6 +103,7 @@
                         success: function(data){
                             var obj = $.parseJSON(data);
                             $('#karma').html(obj.karma);
+                            $('#cancel').html('<a href={{ path('cancelVote',{'id':user.id}) }}><button type="button" class="btn btn-default">Отменить</button></a>');
                             disableButton();
                             $('#add-down').addClass('btn-danger');
                             updateHistory();
