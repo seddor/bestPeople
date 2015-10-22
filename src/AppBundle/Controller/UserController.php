@@ -194,5 +194,28 @@ class UserController extends Controller
         return $this->render(':user:edit_user.html.twig',array('user' => $user,'imageForm' => $form->createView()));
     }
 
+    /**
+     * @Route("id{id}/cancelVote", name="cancelVote")
+     */
+    public function cancelVoteAction($id) {
+        $user = $this->getDoctrine()->getRepository('AppBundle:User')->find($id);
+
+        $em = $this->getDoctrine()->getManager();
+        foreach($user->getHistories()->getValues() as $history) {
+            if($history->getAuthor()->getId() == $this->getUser()->getId()) {
+                $user->removeHistory($history);
+                $this->getUser()->removeHistoryByUser($history);
+                $em->remove($history);
+            }
+        }
+
+        $em->persist($user);
+        $em->persist($this->getUser());
+        $em->flush();
+
+        return $this->redirectToRoute('userPage',array('id' => $id));
+    }
+
+
 
 }

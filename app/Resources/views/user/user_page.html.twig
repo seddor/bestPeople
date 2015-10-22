@@ -19,6 +19,9 @@
                 <div class="btn-group" role="group">
                     <button id="add-down" type="button" class="btn btn-default">-</button>
                     <button id="add-up" type="button" class="btn btn-default">+</button>
+                    {% if complete is not empty %}
+                        <a href={{ path('cancelVote',{'id':user.id}) }}><button type="button" class="btn btn-default">Отменить</button></a>
+                    {% endif %}
                 </div>
                 {% else %}
                     <a href={{ path('editUser',{'id':user.id}) }}><button type="button" class="btn btn-default">Изменить информацию о себе</button></a>
