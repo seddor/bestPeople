@@ -45,15 +45,22 @@ class SecurityController extends Controller
     /**
      * @Route("/login", name="login_form")
      */
-    public function lolAction(Request $request)
+    public function loginAction(Request $request)
     {
         if($this->isGranted('ROLE_USER'))
             return $this->redirectToRoute('main');
 
         $captchaForm = $this->createFormBuilder()
-            ->add('captcha','captcha')->getForm();
+            ->add('captcha','captcha',array(
+                'label' => 'введите код с картинки: '
+            ))->getForm();
 
         $captchaForm->handleRequest($request);
+
+        if ($captchaForm->getErrors(true)->count() != 0) {
+            $error = 'Код с картинки введён неверно';
+            return $this->render(':user:login.html.twig', array('error' => $error,'captcha' => $captchaForm->createView()));
+        }
 
         if($captchaForm->isValid()) {
 
@@ -64,7 +71,7 @@ class SecurityController extends Controller
                 return $this->render(':user:login.html.twig', array('error' => $error,'captcha' => $captchaForm->createView()));
             }
 
-            if ($user->getPassword() == $request->get('password')) {
+            if ($user->getPassword() == $request->get('_password')) {
                 $token = new UsernamePasswordToken($user, $user->getPassword(), 'database_users',$user->getRoles() );
                 $this->get('security.token_storage')->setToken($token);
                 return $this->redirectToRoute('main');

@@ -58,6 +58,11 @@ class UserController extends Controller
 
         $form->handleRequest($request);
 
+        if ($form->getErrors(true)->count() != 0 and !$form->get('file')->isEmpty()) {
+            $error = 'Изображение должно быть не больше 5МБ, в формате .png, .gif, .jpg';
+            return $this->render('user/registration.html.twig', array('error' => $error,'imageForm' => $form->createView()));
+        }
+
         if($form->isValid()) {
             $user = new User();
             $user->setUsername(mb_strtolower($request->get('_username')));
@@ -66,6 +71,12 @@ class UserController extends Controller
 //            $encoder = $this->container->get('security.password_encoder');
 //            $encoded = $encoder->encodePassword($user, $plainPassword);
 //            $user->setPassword($encoded);
+            if (preg_match('/[0-9]/',$request->get('_password')) == 0 or preg_match('/[A-Za-z]/',$request->get('_password')) == 0) {
+                $error = 'Пароль должен содержать латинские бкувы и хотя-бы одну цифру';
+                return $this->render('user/registration.html.twig', array('error' => $error,'imageForm' => $form->createView()));
+            }
+
+
             $user->setPassword($request->get('_password'));
 
             $user->setGender($request->get('_gender'));
@@ -141,11 +152,17 @@ class UserController extends Controller
         $image = new Image();
         $form = $this->createFormBuilder($image)
             ->add('file','file',array(
-                'required' => false
+                'required' => false,
+                'label' => 'Аватар:'
             ))
             ->getForm();
 
         $form->handleRequest($request);
+
+        if ($form->getErrors(true)->count() != 0 and !$form->get('file')->isEmpty()) {
+            $error = 'Изображение должно быть не больше 5МБ, в формате .png, .gif, .jpg';
+            return $this->render(':user:edit_user.html.twig',array('user' => $user,'imageForm' => $form->createView(), 'error' => $error));
+        }
 
         if($form->isValid()) {
             $user->setGender($request->get('_gender'));
