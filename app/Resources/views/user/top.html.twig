@@ -11,7 +11,7 @@
                     </div>
             {% if is_granted("ROLE_USER") %}
                 {% if app.user.username == user.username %}
-                    Ю!
+                    [Вы]
                 {% endif %}
             {% endif %}
                 <div>
@@ -45,30 +45,6 @@
             {% endif %}
         </div>
 
-    {#{% if is_granted("ROLE_USER") %}#}
-            {#{% for history in app.user.historyByUser %}#}
-                {#{% if history.user.id == user.id %}#}
-                    {#{% if history.action == true %}#}
-                        {#<script type="text/javascript">#}
-                        {#disableButton();#}
-                        {#$('#add-up').addClass('btn-success');#}
-                        {#</script>#}
-                    {#{% else %}#}
-                        {#<script type="text/javascript">#}
-                        {#disableButton();#}
-                        {#$('#add-down').addClass('btn-danger');#}
-                        {#</script>#}
-                    {#{% endif %}#}
-                {#{% endif %}#}
-            {#{% endfor %}#}
-        {#<script type="text/javascript">#}
-            {#function disableButton() {#}
-                {#$('#add-down').attr('disabled','disabled');#}
-                {#$('#add-up').attr('disabled','disabled');#}
-            {#}#}
-
-        {#</script>#}
-    {#{% endif %}#}
     {% endfor %}
 </div>
 

@@ -66,18 +66,14 @@ class UserController extends Controller
         if($form->isValid()) {
             $user = new User();
             $user->setUsername(mb_strtolower($request->get('_username')));
-            //pas
-//            $plainPassword = $request->get('_password');
-//            $encoder = $this->container->get('security.password_encoder');
-//            $encoded = $encoder->encodePassword($user, $plainPassword);
-//            $user->setPassword($encoded);
             if (preg_match('/[0-9]/',$request->get('_password')) == 0 or preg_match('/[A-Za-z]/',$request->get('_password')) == 0) {
                 $error = 'Пароль должен содержать латинские бкувы и хотя-бы одну цифру';
                 return $this->render('user/registration.html.twig', array('error' => $error,'imageForm' => $form->createView()));
             }
 
-
-            $user->setPassword($request->get('_password'));
+            $plainPassword = $request->get('_password');
+            $encoded = $this->container->get('security.password_encoder')->encodePassword($user, $plainPassword);
+            $user->setPassword($encoded);
 
             $user->setGender($request->get('_gender'));
 

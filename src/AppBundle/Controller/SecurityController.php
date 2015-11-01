@@ -9,38 +9,6 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class SecurityController extends Controller
 {
-//    /**
-//     * @Route("/login", name="login_form")
-//     */
-//    public function loginAction(Request $request)
-//    {
-//        if($this->isGranted('ROLE_USER'))
-//            return $this->redirectToRoute('main');
-//
-//        $authenticationUtils = $this->get('security.authentication_utils');
-//
-//        $error = $authenticationUtils->getLastAuthenticationError();
-//
-//        $lastUserName = $authenticationUtils->getLastUsername();
-//
-//        $captcaForm = $this->createFormBuilder()
-//            ->add('captcha','captcha')->getForm();
-//
-//        return $this->render(':user:login.html.twig',
-//            array(
-//                'last_username' => $lastUserName,
-//                'error' => $error,
-//            )
-//        );
-//    }
-//
-//    /**
-//     * @Route("/login_check", name="login_check")
-//     */
-//    public function loginCheckAction()
-//    {
-//
-//    }
 
     /**
      * @Route("/login", name="login_form")
@@ -71,7 +39,7 @@ class SecurityController extends Controller
                 return $this->render(':user:login.html.twig', array('error' => $error,'captcha' => $captchaForm->createView()));
             }
 
-            if ($user->getPassword() == $request->get('_password')) {
+              if ($this->get('security.password_encoder')->isPasswordValid($user,$request->get('_password'))) {
                 $token = new UsernamePasswordToken($user, $user->getPassword(), 'database_users',$user->getRoles() );
                 $this->get('security.token_storage')->setToken($token);
                 return $this->redirectToRoute('main');
