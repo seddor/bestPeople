@@ -8,7 +8,7 @@ Best people of internet
  использовать все дефолтные настройки БД, кроме:<br>
 
 >database_name: bestPeople<br>
- >database_user: bestApp<br>
+>database_user: bestApp<br>
 
 2. Создать соответсуюшего пользователя и БД.<br>
  Для создание таблиц в БД: <br>
